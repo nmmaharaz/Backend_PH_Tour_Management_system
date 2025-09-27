@@ -25,6 +25,10 @@ export const createUserZodSchema = z.object({
         message: "Address must be at most 200 characters long"
     }).optional()
 })
+
+
+
+
 export const updateUserZodSchema = z.object({
     name: z.string({ error: "Name must be string" }).min(2, "Name must be at least 2 characters long").max(50, "Name must be less than 50 characters long").optional(),
     password: z.string({
