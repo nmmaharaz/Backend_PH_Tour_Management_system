@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import AppError from "../../errorHelpers/AppError";
 import { IUser } from "../user/user.interface";
 import httpStatus from "http-status-codes"
 import { User } from "../user/user.model";
 import bcrypt from "bcryptjs"
-import { generateToken } from "../../utils/jwt";
+import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
+import { JwtPayload } from "jsonwebtoken";
 import { envVers } from "../../config/env";
 
 const credientialsLogin = async (payload: Partial<IUser>) => {
@@ -21,20 +23,46 @@ const credientialsLogin = async (payload: Partial<IUser>) => {
         throw new AppError(httpStatus.BAD_REQUEST, "Incorrect password")
     }
 
-    const jwtPayload = {
-        userId: isUserExist._id,
-        email: isUserExist.email,
-        role: isUserExist.role
-    }
+    const userTokens = createUserTokens(isUserExist);
 
-    const accessToken = generateToken(jwtPayload, envVers.JWT_ACCESS_SECRET, envVers.JWT_ACCESS_EXPIRES)
+    const { password: pass, ...rest } = isUserExist.toObject();
 
     return {
-        accessToken
+        accessToken: userTokens.accessToken,
+        refreshToken: userTokens.refreshToken,
+        user: rest
     };
+
+}
+const getNewAccessToken = async (refreshToken: string) => {
+    const newAcceessToken = await createNewAccessTokenWithRefreshToken(refreshToken);
+    return {
+        accessToken: newAcceessToken
+    };
+
+}
+const resetPassword = async (oldPassword: string, newPassword: string, decodedToken: JwtPayload) => {
+
+    const user = await User.findById(decodedToken.userId)
+
+    if (!user) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Email does not exist")
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user?.password as string)
+
+    if (!isPasswordMatch) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Old password is incorrect")
+    }
+
+    user.password = await bcrypt.hash(newPassword, Number(envVers.BCRYPT_SALT_ROUND));
+
+    await user.save()
 
 }
 
 export const AuthServices = {
-    credientialsLogin
+    credientialsLogin,
+    getNewAccessToken,
+    resetPassword
 }

@@ -2,7 +2,7 @@ import z from "zod";
 import { IsActive, Role } from "./user.interface";
 
 export const createUserZodSchema = z.object({
-    name: z.string({ error: "Name must be string" }).min(2, "Name must be at least 2 characters long").max(50, "Name must be less than 50 characters long"),
+    name: z.string({ error: "Name must be string" }).min(3, "Name must be at least 2 characters long").max(50, "Name must be less than 50 characters long"),
     email: z.string({ error: "Email must be string" }).email("Invalid email address").min(5, "Email must be at least 5 characters long").max(100, "Email must be less than 50 characters long"),
     password: z.string({
         error: "Password must be a string"
