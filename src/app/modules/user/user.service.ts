@@ -8,10 +8,12 @@ import { JwtPayload } from "jsonwebtoken";
 
 const createUser = async (payload: Partial<IUser>) => {
     const { email, password, ...rest } = payload;
-    const isUserExist = await User.findOne({ email });
-    if (isUserExist) {
-        throw new AppError(httpStatus.BAD_REQUEST, "User already exists")
-    }
+    
+    // Duplicate user check as it is handled in global error handler now 
+    // const isUserExist = await User.findOne({ email });
+    // if (isUserExist) {
+    //     throw new AppError(httpStatus.BAD_REQUEST, "User already exists")
+    // }
 
     const hashPassword = await bcript.hash(password as string, Number(envVers.BCRYPT_SALT_ROUND));
 
@@ -53,7 +55,6 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
         new: true,
         runValidators: true
     })
-
     return newUpdateUser
 }
 

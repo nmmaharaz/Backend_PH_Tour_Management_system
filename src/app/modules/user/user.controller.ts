@@ -4,8 +4,6 @@ import { UserSevices } from "./user.service";
 import { NextFunction, Request, Response } from "express";
 import { sendResponse } from "../../utils/sendResponse";
 import { catchAsync } from "../../utils/catchAsync";
-import { verifyToken } from "../../utils/jwt";
-import { envVers } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 
 
@@ -21,11 +19,9 @@ const createUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 })
 const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
-    console.log("Hellow")
-    const verifiedToken =await req.user
-    console.log("verified==>", verifiedToken)
+    const verifiedToken = req.user
     const payload = await req.body;
-    const user = await UserSevices.updateUser(id, payload, verifiedToken)
+    const user = await UserSevices.updateUser(id, payload, verifiedToken as JwtPayload)
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

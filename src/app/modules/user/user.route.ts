@@ -8,7 +8,9 @@ import { Role } from "./user.interface";
 
 const router = Router();
 
-router.post("/register", validateRequest(createUserZodSchema), UserController.createUser)
+router.post("/register",
+     validateRequest(createUserZodSchema),
+      UserController.createUser)
 
 router.patch("/:id",checkAuth(...Object.values(Role)), validateRequest(updateUserZodSchema), UserController.updateUser)
 
