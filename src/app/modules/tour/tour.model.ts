@@ -1,5 +1,4 @@
 import { model, Schema } from "mongoose";
-import { required } from "zod/v4/core/util.cjs";
 import { ITour, ITourType } from "./tour.interface";
 
 

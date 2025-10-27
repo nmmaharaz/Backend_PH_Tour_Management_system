@@ -5,7 +5,7 @@ const divisionSchema = new Schema<IDivision>(
     {
         name: {type: String, required: true, unique: true},
         slug: {type: String, required: true, unique: true},
-        thambNail: {type: String},
+        thambnail: {type: String},
         description: {type: String}
     },{
     timestamps: true
