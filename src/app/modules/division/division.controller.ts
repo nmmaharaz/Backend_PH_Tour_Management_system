@@ -10,21 +10,30 @@ const createDivision = catchAsync(async(req: Request, res: Response, next: NextF
      sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Division created",
+        message: "Division created successfully",
         data: result
     })
 })
 
 const getAllDivisions = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    const result = await DivisionService.getAllDivisions();
+    console.log("this is problem?????")
+     const result = await DivisionService.getAllDivisions(req.query as Record<string, string>)
      sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Divisions retrieved",
-        data: result.data,
-        meta: {
-            total: result.total
-        }
+        message: "Divisions retrieved successfully",
+        data: result
+    })
+})
+
+const getSingleDivision = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
+    const slug = req.params.slug
+    const result = await DivisionService.getSingleDivisions(slug);
+     sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Divisions retrieved ",
+        data: result
     })
 })
 
@@ -33,7 +42,7 @@ const updateDivision = catchAsync(async(req: Request, res: Response, next: NextF
      sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Division updated",
+        message: "Division updated successfully",
         data: result,
     })
 })
@@ -43,7 +52,7 @@ const deleteDivision = catchAsync(async(req: Request, res: Response, next: NextF
      sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Division deleted",
+        message: "Division deleted successfully",
         data: result,
     })
 })
@@ -54,5 +63,6 @@ export const DivisionController = {
     createDivision, 
     getAllDivisions,
     updateDivision,
-    deleteDivision
+    deleteDivision,
+    getSingleDivision
 }
