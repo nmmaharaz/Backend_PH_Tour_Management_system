@@ -48,7 +48,7 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
     return updateBooking
 }
-const getAllBooking = async (payload: IBooking) => {
+const getAllBooking = async () => {
     return payload
 }
 const updateBooking = async (payload: IBooking) => {
