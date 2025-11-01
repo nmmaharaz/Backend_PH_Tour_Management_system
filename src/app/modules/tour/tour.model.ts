@@ -11,7 +11,7 @@ export const TourType = model<ITourType>("TourType", tourTypeSchema)
 const tourSchema = new Schema<ITour>({
     title: {type: String, required: true},
     slug: {type: String, required: true, unique: true},
-    descriptio: {type: String},
+    description: {type: String},
     image: {type: [String], default: []},
     location: {type: String},
     costFrom: {type: Number},
@@ -28,5 +28,46 @@ const tourSchema = new Schema<ITour>({
 },{
     timestamps: true
 })
+
+
+
+
+tourSchema.pre("save", async function (next) {
+    if (this.isModified("title")) {
+        const baseSlug = this.title.toLowerCase().split(" ").join("-")
+        const createSlug = `${baseSlug}-division`
+        let slug = createSlug
+
+        let counter = 0
+        while (await Tour.exists({ slug })) {
+            slug = `${createSlug}-${counter++}`
+        }
+        this.slug = slug
+    }
+    next()
+})
+
+
+tourSchema.pre("findOneAndUpdate", async function (next) {
+    const tour = this.getUpdate() as Partial<ITour>
+
+    if (tour.title) {
+        const baseSlug = tour.title.toLowerCase().split(" ").join("-")
+        const createSlug = `${baseSlug}`
+        let slug = createSlug
+
+        let counter = 0
+        while (await Tour.exists({ slug })) {
+            slug = `${createSlug}-${counter++}`
+        }
+        tour.slug = slug
+    }
+
+    this.setUpdate(tour)
+
+    next()
+})
+
+
 
 export const Tour = model<ITour>("Tour", tourSchema);
