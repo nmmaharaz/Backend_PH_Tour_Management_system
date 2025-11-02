@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
-import { envVers } from "../config/env";
+import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
 import { IErrorSources } from "../interfaces/error.types";
@@ -13,9 +13,9 @@ import handleZodError from "../helpers/handleZodError";
 
 export const globalError = (err: any, req: Request, res: Response, next: NextFunction) => {
 
-    if (envVers.NODE_ENV === "development") console.log(err, "from global error handler");
+    if (envVars.NODE_ENV === "development") console.log(err, "from global error handler");
     let statusCode = 500
-    const stack = envVers.NODE_ENV === "development" ? err.stack : null
+    const stack = envVars.NODE_ENV === "development" ? err.stack : null
     let message = "Something went wrong"
 
     let errorSources: IErrorSources[] = []
@@ -54,7 +54,7 @@ export const globalError = (err: any, req: Request, res: Response, next: NextFun
         success: false,
         message,
         stack,
-        err: envVers.NODE_ENV === "development" ? err : null,
+        err: envVars.NODE_ENV === "development" ? err : null,
         errorSources
     })
 }

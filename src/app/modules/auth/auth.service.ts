@@ -6,7 +6,7 @@ import { User } from "../user/user.model";
 import bcrypt from "bcryptjs"
 import { createNewAccessTokenWithRefreshToken, createUserTokens } from "../../utils/userTokens";
 import { JwtPayload } from "jsonwebtoken";
-import { envVers } from "../../config/env";
+import { envVars } from "../../config/env";
 
 const credientialsLogin = async (payload: Partial<IUser>) => {
     const { email, password } = payload;
@@ -55,7 +55,7 @@ const resetPassword = async (oldPassword: string, newPassword: string, decodedTo
         throw new AppError(httpStatus.UNAUTHORIZED, "Old password is incorrect")
     }
 
-    user.password = await bcrypt.hash(newPassword, Number(envVers.BCRYPT_SALT_ROUND));
+    user.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND));
 
     await user.save()
 

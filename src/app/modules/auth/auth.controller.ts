@@ -8,7 +8,7 @@ import { setAuthCookie } from "../../utils/setCookie";
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errorHelpers/AppError";
 import { createUserTokens } from "../../utils/userTokens";
-import { envVers } from "../../config/env";
+import { envVars } from "../../config/env";
 import passport from "passport";
 // import passport from "passport";
 
@@ -115,8 +115,8 @@ const googleCallbackController = async (req: Request, res: Response, next: NextF
 
     const tokenInfo = createUserTokens(user)
     setAuthCookie(res, tokenInfo)
-    res.redirect(`${envVers.FRONTEND_URL}/${redirectTo}`);
-    console.log("Redirecting to frontend:", envVers.FRONTEND_URL);
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`);
+    console.log("Redirecting to frontend:", envVars.FRONTEND_URL);
 }
 
 export const AuthControllers = {

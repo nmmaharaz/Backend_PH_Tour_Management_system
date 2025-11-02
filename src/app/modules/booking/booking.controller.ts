@@ -31,7 +31,7 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllBooking = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-    const users = await BookingService.getAllBooking(req.body);
+    const users = await BookingService.getAllBooking();
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

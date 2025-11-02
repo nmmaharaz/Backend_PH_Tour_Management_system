@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import AppError from "../errorHelpers/AppError"
 import { verifyToken } from "../utils/jwt"
-import { envVers } from "../config/env"
+import { envVars } from "../config/env"
 import { JwtPayload } from "jsonwebtoken"
 import { User } from "../modules/user/user.model"
 import { IsActive } from "../modules/user/user.interface"
@@ -11,13 +11,12 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
     try {
         const accessToken = req.headers.authorization
 
-        console.log(accessToken, "accessToken");
 
         if (!accessToken) {
             throw new AppError(403, "No token provided")
         }
 
-        const varifiedToken = verifyToken(accessToken, envVers.JWT_ACCESS_SECRET) as JwtPayload
+        const varifiedToken = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload
         
         const isUserExist = await User.findOne({ email: varifiedToken.email });
 

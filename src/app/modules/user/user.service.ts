@@ -3,7 +3,7 @@ import { IAuthProvider, IUser, Role } from "./user.interface";
 import { User } from "./user.model";
 import httpStatus from "http-status-codes"
 import bcript from "bcryptjs"
-import { envVers } from "../../config/env";
+import { envVars } from "../../config/env";
 import { JwtPayload } from "jsonwebtoken";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { userSecarchableFields } from "../../contants";
@@ -17,7 +17,7 @@ const createUser = async (payload: Partial<IUser>) => {
     //     throw new AppError(httpStatus.BAD_REQUEST, "User already exists")
     // }
 
-    const hashPassword = await bcript.hash(password as string, Number(envVers.BCRYPT_SALT_ROUND));
+    const hashPassword = await bcript.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND));
 
     const authProvider: IAuthProvider = {
         provider: "credentials",
@@ -50,7 +50,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
     }
 
     if (payload.password) {
-        payload.password = await bcript.hash(payload.password, Number(envVers.BCRYPT_SALT_ROUND))
+        payload.password = await bcript.hash(payload.password, Number(envVars.BCRYPT_SALT_ROUND))
     }
 
     const newUpdateUser = await User.findByIdAndUpdate(userId, payload, {
